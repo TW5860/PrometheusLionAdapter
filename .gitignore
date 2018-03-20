@@ -32,6 +32,4 @@ lionAdapter.iml
 .idea/workspace.xml
 .idea/encodings.xml
 .idea/libraries/
-src/main/resources/
-src/test/
 target/
