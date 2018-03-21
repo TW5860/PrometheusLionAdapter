@@ -6,7 +6,6 @@ import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,40 +19,44 @@ public class WebServiceCheck {
     private static final Logger LOG = LoggerFactory.getLogger(WebServiceCheck.class);
     private static final Counter tests = Counter.build()
             .name("tests_total")
-            .help("Total tests run.")
+            .help("Total tests callWebserviceTest.")
             .labelNames("webservice")
             .register();
     private static final Gauge success = Gauge.build()
             .name("tests_successful")
-            .help("Was last test run successful?")
+            .help("Was last test callWebserviceTest successful?")
             .labelNames("webservice")
             .register();
+    @Autowired
+    private WebserviceRepo repo;
 
     @Autowired
     public WebServiceCheck() {
     }
 
     @Scheduled(fixedDelay = 15000)
-    public void sheduledDLABESv3() {
-        runTest("DLABESv3", "http://kims-macbook-pro.local:8088/mockDienstleisterAuftragBESv3Binding/testService", "DienstleisterAuftragBESv3testServiceRequest1", "http://BeauftragungGruppe/DienstleisterAuftragBES/specification/ServiceView/DienstleisterAuftragBESProvider/DienstleisterAuftragBESv3");
+    public void sheduledCheck() {
+        for (WebserviceRegistrationInfo info : repo.getAll()) {
+            runTest(info.getName(), info.getUrl(), info.getRequestName(), info.getNamespace());
+        }
     }
 
     private void runTest(String name, String url, String requestName, String namespace) {
-        int result = 0;
+        int result;
         tests.labels(name).inc();
         try {
             LOG.info("Run against " + name + ".");
-            run(url, requestName, namespace);
-            LOG.info("Test with " + name + " was successful.");
-            result = 1;
+            result = callWebserviceTest(url, requestName, namespace);
+            LOG.info("Test with " + name + " was performed successfully.");
         } catch (Exception e) {
-            LOG.info("Test with \" + name + \" failed, caught exception.", e);
+            LOG.info("Test with " + name + " failed, caught exception.", e);
             result = 0;
         }
+        LOG.info("Result was : " + result);
         success.labels(name).set(result);
     }
 
-    public String run(String url, String name, String namespace) throws IOException {
+    private int callWebserviceTest(String url, String name, String namespace) throws IOException {
         String myContent = String.format("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dien=\"%s/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
@@ -80,8 +83,7 @@ public class WebServiceCheck {
 
         Response response = client.newCall(request).execute();
         String responseString = response.body().string();
-
-        return responseString;
+        return responseString.contains("err") ? 2 : 1;
     }
 
 }
