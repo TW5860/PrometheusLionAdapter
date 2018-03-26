@@ -1,0 +1,23 @@
+{
+  "imposters": [
+    {
+      "port": 8181,
+      "protocol": "http",
+      "stubs": [
+        {
+          "responses": [
+            {
+              "is": {
+                "statusCode": 200,
+                "headers": {
+                  "Content-Type": "text/plain"
+                },
+                "body": "Hello visitor, this is a succesful answer"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

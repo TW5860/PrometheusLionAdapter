@@ -1,4 +1,4 @@
-package webservice_live;
+package webservice_live.prometheus.registrationbased;
 
 import io.prometheus.client.spring.boot.EnablePrometheusEndpoint;
 import org.springframework.context.annotation.Bean;

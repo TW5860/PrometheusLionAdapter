@@ -1,4 +1,4 @@
-package webservice_live;
+package webservice_live.prometheus.registrationbased;
 
 public class WebserviceRegistrationInfo {
     private String name;
@@ -6,7 +6,7 @@ public class WebserviceRegistrationInfo {
     private String requestName;
     private String url;
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -14,7 +14,7 @@ public class WebserviceRegistrationInfo {
         this.name = name;
     }
 
-    String getNamespace() {
+    public String getNamespace() {
         return namespace;
     }
 
@@ -22,7 +22,7 @@ public class WebserviceRegistrationInfo {
         this.namespace = namespace;
     }
 
-    String getRequestName() {
+    public String getRequestName() {
         return requestName;
     }
 
@@ -30,10 +30,10 @@ public class WebserviceRegistrationInfo {
         this.requestName = requestName;
     }
 
-    String getUrl() {
+    public String getUrl() {
         return url;
     }
-    
+
     public void setUrl(String url) {
         this.url = url;
     }

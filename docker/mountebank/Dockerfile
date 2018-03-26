@@ -1,0 +1,10 @@
+FROM node
+
+ENV MOUNTEBANK_VERSION=1.13.0
+
+RUN npm install -g mountebank@${MOUNTEBANK_VERSION} --production
+
+EXPOSE 2525
+EXPOSE 8181
+
+CMD sleep 8640000

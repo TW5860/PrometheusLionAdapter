@@ -1,0 +1,67 @@
+version: "2"
+
+services:
+  prometheus-blackbox:
+    image: prom/blackbox-exporter
+    ports:
+      - 9115:9115
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+    command:
+      --config.file=/etc/prometheus/blackbox-exporter.yml
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "512k"
+        max-file: "2"
+
+  prometheus:
+    build: docker/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus-data
+    links:
+      - prometheus-blackbox
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "512k"
+        max-file: "2"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config/grafana:/etc/grafana
+      - grafana-data:/var/lib/grafana
+    #environment:
+    #  - GF_SECURITY_ADMIN_PASSWORD=secret
+    links:
+      - prometheus
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "512k"
+        max-file: "2"
+
+  lionadapter:
+    image: docker/lion
+    build:
+      context: https://github.com/TW5860/PrometheusLionAdapter.git
+      dockerfile: ./docker/lion/Dockerfile
+      args:
+        JAR_FILE: /target/lionAdapter-1.0-SNAPSHOT.war
+    container_name: lionadapter
+    links:
+      - prometheus
+
+volumes:
+
+  prometheus-data: {}
+  grafana-data: {}
