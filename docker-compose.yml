@@ -25,6 +25,7 @@ services:
       - prometheus-data:/prometheus-data
     links:
       - prometheus-blackbox
+      - lionadapter
     restart: unless-stopped
     logging:
       driver: json-file
@@ -51,15 +52,10 @@ services:
         max-file: "2"
 
   lionadapter:
-    image: docker/lion
-    build:
-      context: https://github.com/TW5860/PrometheusLionAdapter.git
-      dockerfile: ./docker/lion/Dockerfile
-      args:
-        JAR_FILE: /target/lionAdapter-1.0-SNAPSHOT.war
+    build: .
+    ports:
+          - 8080:8080
     container_name: lionadapter
-    links:
-      - prometheus
 
 volumes:
 

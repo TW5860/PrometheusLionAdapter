@@ -22,10 +22,11 @@ scrape_configs:
     metrics_path: /stateless
     params:
       module: [http_service]
-      target: ['http://localhost:8080/stateless']
+      target: ['http://lionadapter:8080/stateless']
       url: ['http://kims-macbook-pro.local:8088/mockDienstleisterAuftragBESv3Binding/testService&requestName=DienstleisterAuftragBESv3testServiceRequest1']
+      requestName: ['DienstleisterAuftragBESv3testServiceRequest1']
       namespace: ['http://BeauftragungGruppe/DienstleisterAuftragBES/specification/ServiceView/DienstleisterAuftragBESProvider/DienstleisterAuftragBESv3']
-      name: ['Myservice']
+      name: ['DienstleisterAuftragBESv3testServiceRequest1']
     scheme: http
     static_configs:
-      - targets: ['localhost:8080']
+      - targets: ['lionadapter:8080']
