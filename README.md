@@ -7,14 +7,15 @@ To monitor a service you have to register that service to the adapter.
 You can use the http post endpoint to do this. (/register)
 
 The body needs to contain following JSON Body:
-'''
+
+```
 {
   "name": {{name}},
   "namespace": {{namespace}},
   "requestName": {{requestName}},
   "url": {{url}}
 }
-'''
+```
 
 Name is only a label used to identify the service.
 Namespace is required to build the SOAP request. 
